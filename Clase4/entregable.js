@@ -72,18 +72,40 @@ class Contenedor {
     }
 
     //metodo obtener por nombre
-    getById(idProducto){
-        
+    async getById(idProducto){
+        try {
+            const resultado = await productosDemo.find(obj => obj.id === idProducto);
+            return console.log(resultado);
+        } catch (error) {
+            console.error(error);
+        }
     }
     
     //metodo para borrar por id
-    deleteById(){
+    async deleteById(idABorrar){
+        try {
+            const resultado = productosDemo.find(obj => obj.id === idABorrar);
+            const indexResultado = productosDemo.indexOf(resultado)
+            productosDemo.splice(indexResultado, 1)
+            this.montarProductosDemo()
+            return (console.log("Se eliminó el producto " + resultado.title ))
+        } catch (error) {
+            console.error(error);
+        }
     }
     
     //metodo para borrar todo
-    deleteAll(){
+    async deleteAll(){
+        try {
+            await fs.promises.unlink(this.ruta)
+            return (console.log("Se eliminó el archivo " + this.ruta))
+
+        } catch (error) {
+            console.error(error);
+        }
     }
 }
+
 let db = new Contenedor ('productos.txt');
 
 
@@ -94,4 +116,10 @@ db.save({
     price: 345.67,
     thumbnail: "https://cdn3.iconfinder.com/data/icons/education-209/64/globe-earth-geograhy-planet-school-256.png",
 })
+
+db.getById(4)
+
+db.deleteById(4)
+
+/*db.deleteAll()*/
 

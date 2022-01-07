@@ -25,9 +25,9 @@ class Contenedor {
     }
 
     //metodo para iniciar el archivo con productos
-    montarProductosDemo(){
+    async montarProductosDemo(){
         try {
-            fs.promises.writeFile(this.ruta, JSON.stringify(productosDemo, null, 2), error => {
+            await fs.writeFile(this.ruta, JSON.stringify(productosDemo, null, 2), error => {
                 if (error) {
                     throw new Error(error);
                 } else {
@@ -50,7 +50,7 @@ class Contenedor {
                         contentObj: JSON.parse(content),
                         size: 0
                     }
-                    return console.log(info);
+                    return info;
                 }
             })
         } catch (error) {
@@ -60,18 +60,12 @@ class Contenedor {
 
     //metodo guardar
     save(obj){
-        this.getAll()
         if(obj.id === undefined){
-            obj.id = info.contentObj.length + 1   // si no tiene ID se lo defino
+            obj.id = productosDemo.length + 1   // si no tiene ID se lo defino
         }
         try {
-            fs.appendFile(this.ruta, JSON.stringify(obj, null, 2), (error, content) => {
-                if (error) {
-                    throw new Error(error);
-                } else {
-                    return console.log("Se agrego un producto: " + obj.title);
-                }
-            })
+            productosDemo.push(obj)
+            this.montarProductosDemo()
         } catch (error) {
             console.error(error);
         }
@@ -94,8 +88,9 @@ let db = new Contenedor ('productos.txt');
 
 
 db.montarProductosDemo()
-db.getAll({
-    title: "Globo Terráqueo",
+    
+db.save({
+    title: "Maspa",
     price: 345.67,
     thumbnail: "https://cdn3.iconfinder.com/data/icons/education-209/64/globe-earth-geograhy-planet-school-256.png",
 })

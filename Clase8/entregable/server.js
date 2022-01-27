@@ -1,7 +1,7 @@
 /* --------------------------------Modulos-------------------------------- */
 const express = require('express');
 const router  = express.Router();
-const morgan = require('morgan')
+const morgan = require('morgan');
 
 /* --------------------------------Instancia de express-------------------------------- */
 
@@ -30,11 +30,11 @@ const dbProductos = [
         precio: 300,
         miniatura: "https://cdn3.iconfinder.com/data/icons/education-209/64/calculator-math-tool-school-256.png"
     }
-]
+];
 
 /* --------------------------------Servidor-------------------------------- */
 
-const PORT = 8080
+const PORT = 8080;
 const server = app.listen(PORT, () => {
     console.log(
         `
@@ -62,7 +62,7 @@ router.get('/:id', (req, res) => {
         return res.status(200).json( { error: 'producto no encontrado'} );
     };
     res.status(200).json({producto: dbProductos[indiceEnArray]});  
-})
+});
 
 
 /*---POSTs---*/
@@ -79,7 +79,7 @@ router.post('/', (req, res) => {
         msg: "Se agrego exitosamente el producto: " + productoNuevo.titulo,
         productos: dbProductos
     });
-})
+});
 
 /*---PUTs---*/
 
@@ -103,7 +103,7 @@ router.put('/:id', (req, res) => {
         productoModificado: dbProductos[id - 1],
         productos: dbProductos
     });
-})
+});
 
 /*---DELETESs---*/
 
@@ -121,4 +121,4 @@ router.delete('/:id', (req, res) => {
         msg: "Se eliminó correctamente el producto: " + id,
         productos: dbProductos
     });
-})
+});

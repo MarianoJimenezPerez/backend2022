@@ -13,6 +13,15 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.use('/api', router);
 
+app.set('views','./views');
+app.set('view engine', 'pug');
+
+/* --------------------------------Rutas-------------------------------- */
+
+router.get('/', (req, res) => {
+    res.status(200).send('get ok');  
+})
+
 /* --------------------------------Servidor-------------------------------- */
 
 const PORT = 8080
@@ -25,18 +34,17 @@ const server = app.listen(PORT, () => {
 })
 server.on("error", error => console.log(`Se detecto un error: ${error}`));
 
-/* --------------------------------Rutas-------------------------------- */
-
-router.get('/', (req, res) => {
-    res.status(200).send('get ok');  
-})
 
 /*
     1) Servidor base con express y router. Para poder utilizarlo se deberá ejecutar en consola:
 
         npm i express.
+    
+    2) Agregar en el package.json el código de abajo para poder ejecutar "npm run dev" y abrir con nodemon
 
-    2) Si se desea agregar morgan declarar en modulos:
+        "dev": "nodemon server.js"
+
+    3) Si se desea agregar morgan declarar en modulos:
     
         const morgan = require('morgan');
 
@@ -44,7 +52,7 @@ router.get('/', (req, res) => {
 
         npm i morgan
 
-    3) Si se desea agregar una carpeta public o cualquier carpeta estática, agregar en middlewares:
+    4) Si se desea agregar una carpeta public o cualquier carpeta estática, agregar en middlewares:
 
         app.use(express.static('public')); 
  */

@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.2",
+    "path": "^0.12.7",
     "pug": "^3.0.2"
   }
 }

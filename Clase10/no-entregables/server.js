@@ -1,5 +1,6 @@
 /* --------------------------------Modulos-------------------------------- */
-const express = require('express'); 
+const express = require('express');
+const path = require('path');
 const pug = require('pug');
 
 /* --------------------------------Instancia de express-------------------------------- */
@@ -15,8 +16,8 @@ app.use(express.static('public'));
 
 /* --------------------------------Motor de plantilla-------------------------------- */
 
-app.set('views','./views');
-app.set('view engine', 'pug');
+app.set('views', path.join('views'));
+app.set('view engine', '');
 
 /* --------------------------------Rutas-------------------------------- */
 
@@ -27,7 +28,8 @@ app.get('/datos', (req, res) => {
         max: req.query.max,
         nivel: req.query.nivel
     }
-    res.status(200).render('layout.pug', datos)    
+    console.log(req.query)
+    res.render('layout.pug', { datos })
 });
 
 /* --------------------------------Servidor-------------------------------- */

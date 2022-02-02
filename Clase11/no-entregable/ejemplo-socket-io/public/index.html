@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App socket io</title>
+    <script src="/socket.io/socket.io.js">
+        // en el src llamo a la libreria que yo instalé, desde el cliente.
+    </script>
+</head>
+<body>
+    <h1>Primera app con socket.io</h1>
+    <input type="text" id="mensaje-envia">
+    <p>Desde el servidor:
+        <span id="mensaje-recibe"></span>
+    </p>
+    <script>
+        const socket = io.connect(); // Ya podemos empezar a usar los sockets desde el cliente
+        const input = document.querySelector('#mensaje-envia');
+        input.addEventListener('input', () => {
+            socket.emit('mensaje', input.value)
+        })
+        socket.on('mensajes', data => {    //escucho los mensajes "mensajes" que me envía el servidor
+            document.querySelector('#mensaje-recibe').innerHTML = data;
+        })
+    </script>
+</body>
+</html>

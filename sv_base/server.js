@@ -13,9 +13,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.use('/api', router);
 
-app.set('views','./views');
-app.set('view engine', 'pug');
-
 /* --------------------------------Rutas-------------------------------- */
 
 router.get('/', (req, res) => {

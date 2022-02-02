@@ -1,0 +1,10 @@
+extends layout
+
+block anexo
+    each producto in listaProductos
+        tr 
+            th(scope="row" class="text-center")=`${producto.id}`
+            td(scope="row" class="text-center")=`${producto.title}`
+            td(scope="row" class="text-center")=`${producto.price}`
+            td(scope="row" class="text-center")
+                img(src=`${producto.thumbnail}`)

@@ -21,13 +21,14 @@ app.set('view engine', (__dirname, 'ejs'));
 
 /* --------------------------------Rutas-------------------------------- */
 
-app.post('/personas', (req, res) => {
-    const datos = {
-        nombre: req.body.nombre,
-        apellido: req.body.apellido,
-        edad: req.body.edad,
+app.post('/productos', (req, res) => {
+    const productoNuevo = {
+        id: productos.length + 1,
+        title: req.body.title,
+        price: req.body.price,
+        thumbnail: req.body.thumbnail
     }
-    personas.push(datos)
+    productos.push(productoNuevo);
     res.redirect('/')
 });
 

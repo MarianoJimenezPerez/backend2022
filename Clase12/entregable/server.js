@@ -18,7 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
 
-/* --------------------------------Productos-------------------------------- */
+/* --------------------------------Globales-------------------------------- */
 
 const productos = [
     {
@@ -38,6 +38,15 @@ const productos = [
         price: 345.67,
         thumbnail: "https://cdn3.iconfinder.com/data/icons/education-209/64/globe-earth-geograhy-planet-school-256.png",
         id: 3
+    }
+];
+
+let date = new Date
+const mensajes = [
+    {
+        email: "System",
+        message: "Bienvenido",
+        hour: `[${date.getHours()}:${date.getMinutes()}]` // envio la fecha en formato [hora:minutos] de cuando se conecta el socket
     }
 ];
 
@@ -63,17 +72,24 @@ function escribirArchivo(){
 
 io.on('connection', (socket) => { //defino la conexión y recibo con "on" al cliente.
 
-    escribirArchivo()
-
     //envio los productos históricos
     socket.emit('productosHistoricos', productos)
+
+    //envio los mensajes históricos
+    socket.emit('mensajesHistoricos', mensajes)
 
     //escucho nuevos productos
     socket.on('nuevoProducto', data => {
         data.id = productos.length + 1;
         productos.push(data)
         escribirArchivo()
-        io.sockets.emit('productosHistoricos', productos)  //actualizo la vista, enviando nuevamente la bandeja histórica
+        io.sockets.emit('productosHistoricos', productos)  //actualizo la vista, enviando nuevamente los productos históricos
+    })
+
+    //escucho nuevos mensajes
+    socket.on('nuevoMensaje', data => {
+        mensajes.push(data)
+        io.sockets.emit('mensajesHistoricos', mensajes)  //actualizo la vista, enviando nuevamente la bandeja histórica
     })
 })
 
@@ -81,6 +97,10 @@ io.on('connection', (socket) => { //defino la conexión y recibo con "on" al cli
 
 const PORT = 8080
 const server = httpServer.listen(PORT, () => {  //escucho al httpserver, quien contiene el express
+
+    //escribo mi primer archivo con los textos en la db
+    escribirArchivo()
+
     console.log(
         `
         Servidor Http escuchando en el puerto  ${PORT}

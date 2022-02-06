@@ -10,7 +10,7 @@ const productForm = document.querySelector('#product-form');
 
 /* --------------------------------Funciones-------------------------------- */
 
- function enviarProducto() {
+function enviarProducto() {
     socket.emit('nuevoProducto', {
         title: inputTitle.value,
         price: inputPrice.value,

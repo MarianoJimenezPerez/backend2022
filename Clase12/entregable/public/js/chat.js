@@ -19,7 +19,7 @@ function enviarMensaje() {
     socket.emit('nuevoMensaje', {
         email: inputChatEmail.value,
         message: inputChatMessage.value,
-        hour: `[${date.getHours()} ${date.getMinutes()}]` //envio la fecha de en formato [hora:minutos] de cuando se envía un nuevo mensaje
+        hour: `[${date.getHours()}:${date.getMinutes()}]` //envio la fecha de en formato [hora:minutos] de cuando se envía un nuevo mensaje
     })
 }
 

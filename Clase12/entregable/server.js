@@ -4,6 +4,8 @@ const express = require('express');
 const {Server: HttpServer } = require('http');
 const {Server: IOServer } = require('socket.io');
 const fs = require('fs');
+const { engine } = require('express-handlebars');
+
 
 /* --------------------------------Instancia de express-------------------------------- */
 
@@ -15,10 +17,20 @@ const io = new IOServer(httpServer); //configuro mi sv de io
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static('public'));
+app.use(express.static( __dirname + '/public'));
+app.set('views', './views');
+app.set('view engine', 'hbs')
+app.engine('hbs', engine({
+    extname: 'hbs',
+    defaultLayout: 'layout',
+    partialsDir: __dirname + '/views/partials',
+    layoutsDir: __dirname + '/views/layouts/'
+}))
 
 
 /* --------------------------------Globales-------------------------------- */
+
+let date = new Date;
 
 const productos = [
     {
@@ -41,7 +53,6 @@ const productos = [
     }
 ];
 
-let date = new Date
 const mensajes = [
     {
         email: "System",
@@ -55,8 +66,8 @@ const mensajes = [
 function escribirArchivo(){
     let productosJson = JSON.stringify(productos);
     try {
-        fs.writeFileSync('productos.txt', productosJson);
-        const archivo1 =  fs.readFileSync('productos.txt', 'utf-8', (err, resp) =>{
+        fs.writeFileSync('productos.json', productosJson);
+        const archivo1 =  fs.readFileSync('productos.json', 'utf-8', (err, resp) =>{
             if(err){
                 console.error("Se frenó la ejecución. Archivo ilegible")
             } else {
@@ -92,6 +103,11 @@ io.on('connection', (socket) => { //defino la conexión y recibo con "on" al cli
         io.sockets.emit('mensajesHistoricos', mensajes)  //actualizo la vista, enviando nuevamente la bandeja histórica
     })
 })
+/* --------------------------------Rutas-------------------------------- */
+
+app.get('/', (req, res, next) => {
+    res.render('index', {})
+});
 
 /* --------------------------------Servidor-------------------------------- */
 

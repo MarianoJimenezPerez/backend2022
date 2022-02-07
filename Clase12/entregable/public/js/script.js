@@ -36,7 +36,7 @@ socket.on('productosHistoricos', productos => {
             <td>${producto.title}</td>
             <td>${producto.price}</td>
             <td>
-                <img src="${producto.thumbnail}"></img>
+                <img class="img-thumbnail"src="${producto.thumbnail}"></img>
             </td>
         `
         tBodyProductos.appendChild(tr)

@@ -6,7 +6,12 @@
                 <div class="card-body">
                     <h5 class="card-title"><%= producto.nombre %></h5>
                     <p class="card-text"><%= producto.descripcion %></p>
+                    <p class="product-id d-none"><%= producto.id %></p>
                     <a href="#" class="btn btn-primary">Conocer</a>
+                    <% if (administrador) { %>
+                        <button class="btn btn-warning modificar-producto">Actualizar</button>
+                        <button class="btn btn-danger mt-2 eliminar-producto">Eliminar</button>
+                    <% } %>
                 </div>
             </div>
         </div>

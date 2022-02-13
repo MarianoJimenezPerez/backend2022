@@ -1,8 +1,13 @@
 /* --------------------------------Modulos-------------------------------- */
+
 const express = require('express');
 const routerProductos  = express.Router(); 
 const routerCarrito  = express.Router();
 const ejs = require('ejs');
+
+/* --------------------------------Admin boolean-------------------------------- */
+
+const administrador = true;
 
 /* --------------------------------Instancia de express-------------------------------- */
 
@@ -61,12 +66,19 @@ const dbProductos = [
     }
 ];
 
+const carritos = [
+    {
+        system: "System",
+        id: 1
+    }
+];
+
 /* --------------------------------Rutas router productos-------------------------------- */
 
 /*---GETs router productos---*/
 
 routerProductos.get('/', (req, res) => {
-    res.status(200).render('pages/index', {dbProductos}) 
+    res.status(200).render('pages/index', {dbProductos, administrador}) 
 })
 
 routerProductos.get('/:id', (req, res) => {
@@ -84,69 +96,124 @@ routerProductos.get('/:id', (req, res) => {
 /*---POSTs router productos---*/
 
 routerProductos.post('/', (req, res) => {
-    let lastId = dbProductos[dbProductos.length - 1].id;  // id del último elemento del array + 1.
-    let tiempo = new Date();
-    const productoNuevo = {
-        timestamp: tiempo,
-        nombre: req.body.nombre,
-        descripcion: req.body.descripcion,
-        foto: req.body.foto,
-        stock: req.body.stock,
-        precio: req.body.precio,
-        id: lastId + 1
+    if(administrador){
+        let lastId = dbProductos[dbProductos.length - 1].id;  // id del último elemento del array + 1.
+        let tiempo = new Date();
+        const productoNuevo = {
+            timestamp: tiempo,
+            nombre: req.body.nombre,
+            descripcion: req.body.descripcion,
+            foto: req.body.foto,
+            stock: req.body.stock,
+            precio: req.body.precio,
+            id: lastId + 1
+        }
+        dbProductos.push(productoNuevo);
+        res.redirect('/productos')
+    } else {
+        res.status(200).render('pages/notAdmin.ejs');
     }
-    dbProductos.push(productoNuevo);
-    res.status(200).json({
-        msg: "Se agrego exitosamente el producto: " + productoNuevo.nombre,
-        productos: dbProductos
-    });
 });
 
 /*---PUTs router productos---*/
 
 routerProductos.put('/:id', (req, res) => {
-    let tiempo = new Date();
-    const id = parseInt(req.params.id);
-    if (isNaN(id)) {
-        return res.status(200).json( { error: 'Ingrese un ID válido' } );
-    };
-    if ( id < 1 || id > dbProductos.length) {
-        return res.status(200).json( { error: 'producto no encontrado'} );
-    };
-    const indiceEnArray = dbProductos.map(producto => producto.id).indexOf(id);
-    dbProductos[indiceEnArray] = {
-        timestamp: tiempo,
-        nombre: req.body.nombre,
-        descripcion: req.body.descripcion,
-        foto: req.body.foto,
-        stock: req.body.stock,
-        precio: req.body.precio,
-        titulo: req.body.titulo,
-        id: id
-    };
-    res.status(200).json({
-        msg: `Se modifico correctamente el producto: ${dbProductos[indiceEnArray].nombre} con id: ${dbProductos[indiceEnArray].id}`,
-        productos: dbProductos
-    });
+    if(administrador){
+        let tiempo = new Date();
+        const id = parseInt(req.params.id);
+        if (isNaN(id)) {
+            return res.status(200).json( { error: 'Ingrese un ID válido' } );
+        };
+        if ( id < 1 || id > dbProductos.length) {
+            return res.status(200).json( { error: 'producto no encontrado'} );
+        };
+        const indiceEnArray = dbProductos.map(producto => producto.id).indexOf(id);
+        dbProductos[indiceEnArray] = {
+            timestamp: tiempo,
+            nombre: req.body.nombre,
+            descripcion: req.body.descripcion,
+            foto: req.body.foto,
+            stock: req.body.stock,
+            precio: req.body.precio,
+            id: id
+        };
+        res.status(200).json({
+            msg: `Se modifico correctamente el producto: ${dbProductos[indiceEnArray].nombre} con id: ${dbProductos[indiceEnArray].id}`,
+            productos: dbProductos
+        });
+    } else {
+        res.status(200).render('pages/notAdmin.ejs');
+    }
 });
 
 /*---DELETEs---*/
 
 routerProductos.delete('/:id', (req, res) => {
-    const id = parseInt(req.params.id);
-    if (isNaN(id)) {
-        return res.status(200).json( { error: 'Ingrese un ID válido' } );
-    };
-    if ( id < 1 || id > dbProductos.length) {
-        return res.status(200).json( { error: 'producto no encontrado'} );
-    };
-    const indiceEnArray = dbProductos.map(producto => producto.id).indexOf(id);
-    dbProductos.splice(indiceEnArray, 1);
-    res.status(200).json({
-        msg: `Se eliminó correctamente el producto: ${dbProductos[indiceEnArray].nombre} con id: ${dbProductos[indiceEnArray].id}`,
-        productos: dbProductos
-    });
+    if(administrador){
+        const id = parseInt(req.params.id);
+        if (isNaN(id)) {
+            return res.status(200).json( { error: 'Ingrese un ID válido' } );
+        };
+        if ( id < 1 || id > dbProductos.length) {
+            return res.status(200).json( { error: 'producto no encontrado'} );
+        };
+        const indiceEnArray = dbProductos.map(producto => producto.id).indexOf(id);
+        dbProductos.splice(indiceEnArray, 1);
+        res.redirect('/productos')
+    } else {
+        res.status(200).render('pages/notAdmin.ejs');
+    }
 });
+
+/* --------------------------------Rutas router carrito-------------------------------- */
+
+/*---GETs router carrito---*/
+
+routerCarrito.get('/:id/productos', (req, res) => {
+    const id = parseInt(req.params.id);  //param del id del carrito
+    const indiceDeCarrito = carritos.map(carrito => carrito.id).indexOf(id); //obtengo con el param la posición del carrito a consultar
+    res.status(200).json({carrito: carritos[indiceDeCarrito]})  //imprimo el carrito con los productos agregados
+})
+
+/*---POSTs router carrito---*/
+
+routerCarrito.post('/', (req, res) => {
+    let lastId = carritos[carritos.length - 1].id;
+    let carrito = {
+        id: lastId + 1,
+        productos: [],
+    }
+    carritos.push(carrito)
+    res.status(200).json({carrito: carritos[carrito.id - 1]}) 
+})
+
+routerCarrito.post('/:id/:productoId', (req, res) => {
+    const id = parseInt(req.params.id);  //param del id del carrito al cual se va a pushear producto
+    const productoId = parseInt(req.params.productoId); // param del id del producto que se va a pushear al carrito recibido por param anteriormente
+    const indiceDeCarrito = carritos.map(carrito => carrito.id).indexOf(id); //obtengo con el param la posición del carrito a pushear
+    const IndexProductoAPushear = dbProductos.map(producto => producto.id).indexOf(productoId); //obtengo con el param la posición del producto a pushear
+    carritos[indiceDeCarrito].productos.push(dbProductos[IndexProductoAPushear]); //dentro de la property "productos" del carrito, pusheo el producto
+    res.status(200).json({carrito: carritos[indiceDeCarrito]})  //imprimo el carrito con los productos agregados
+})
+
+/*---DELETEs router carrito---*/
+
+routerCarrito.delete('/:id', (req, res) => {
+    const id = parseInt(req.params.id); //param del id del carrito
+    const indiceDeCarrito = carritos.map(carrito => carrito.id).indexOf(id); //obtengo con el param la posición del carrito a eliminar
+    carritos[indiceDeCarrito].productos = ''; // limpio los productos que había agregado
+    carritos.splice(indiceDeCarrito, 1); // elimino el carrito
+    res.status(200).json({carritos: carritos})  //imprimo todos los carritos
+})
+
+routerCarrito.delete('/:id/productos/:id_prod', (req, res) => {
+    const id = parseInt(req.params.id);  //param del id del carrito al cual se le va a eliminar el producto
+    const productoId = parseInt(req.params.id_prod); // param del id del producto que se va a eliminar del carrito
+    const indiceDeCarrito = carritos.map(carrito => carrito.id).indexOf(id); //obtengo con el param la posición del carrito a editar
+    const IndexProductoAEliminar = carritos[indiceDeCarrito].productos.map(producto => producto.id).indexOf(productoId); //dentro del array de productos de mi carrito, obtengo el index del producto a eliminar
+    carritos[indiceDeCarrito].productos.splice(IndexProductoAEliminar, 1); //dentro de la property "productos" del carrito, pusheo el producto
+    res.status(200).json({carrito: carritos[indiceDeCarrito]})  //imprimo el carrito con los productos agregados
+})
 
 /* --------------------------------Servidor-------------------------------- */
 

@@ -27,41 +27,42 @@ app.set('view engine', (__dirname, 'ejs'));
 
 /* --------------------------------Arrays globales-------------------------------- */
 
+let tiempo = new Date();
 const dbProductos = [
     { 
-        timestamp: "1",
-        nombre: "Teclado",
-        descripcion: "Este es un teclado mecánico 60%",
-        foto: "https://cdn3.iconfinder.com/data/icons/education-209/64/ruler-triangle-stationary-school-256.png",
-        stock: 4,
-        precio: 200,
+        timestamp: tiempo,
+        nombre: "Teclado Gamer Redragon K530 Draconic RGB Black Bluetooth USB",
+        descripcion: "Teclado Gamer Redragon K530 Draconic RGB Black Bluetooth USB",
+        foto: "https://mundofix.com/387852-large_default/teclado-gamer-redragon-k530-draconic-rgb-black-bluetooth-usb.jpg",
+        stock: 5,
+        precio: 9250,
         id: 1
     },
     { 
-        timestamp: "1",
-        nombre: "Mouse",
-        descripcion: "Un mouse de 11 botones",
-        foto: "https://cdn3.iconfinder.com/data/icons/education-209/64/calculator-math-tool-school-256.png",
+        timestamp: tiempo,
+        nombre: "Mouse Gamer Redragon M908 Impact RGB USB",
+        descripcion: "Mouse Gamer Redragon M908 Impact RGB USB",
+        foto: "https://mundofix.com/395584-large_default/mouse-gamer-redragon-m908-impact-rgb-usb.jpg",
         stock: 10,
-        precio: 100,
+        precio: 2800,
         id: 2
     },
     { 
-        timestamp: "1",
-        nombre: "Mousepad",
-        descripcion: "Un mousepad terrible",
-        foto: "https://cdn3.iconfinder.com/data/icons/education-209/64/calculator-math-tool-school-256.png",
+        timestamp: tiempo,
+        nombre: "Redragon P006 Kunlun L",
+        descripcion: "Redragon P006 Kunlun L",
+        foto: "https://mundofix.com/400138-large_default/redragon-p006-kunlun-l.jpg",
         stock: 8,
-        precio: 300,
+        precio: 3050,
         id: 3
     },
     { 
-        timestamp: "1",
-        nombre: "Monitor",
-        descripcion: "Un monitor 144hz",
-        foto: "https://cdn3.iconfinder.com/data/icons/education-209/64/calculator-math-tool-school-256.png",
-        stock: 6,
-        precio: 500,
+        timestamp: tiempo,
+        nombre: "Redragon GM3CC27 Jade 27 165hz",
+        descripcion: "Redragon GM3CC27 Jade 27 165hz",
+        foto: "https://mundofix.com/397641-large_default/redragon-gm3cc27-jade-27-165hz.jpg",
+        stock: 3,
+        precio: 53000,
         id: 4
     }
 ];
@@ -85,7 +86,7 @@ routerProductos.get('/:id', (req, res) => {
     let id = parseInt(req.params.id);
     const indiceEnArray = dbProductos.map(producto => producto.id).indexOf(id);
     if (isNaN(id)) {
-        return res.status(200).json( { error: 'El parámetro ingresado no es un número' } );
+        return res.status(200).json( { error: 'Ruta no implementada, o el parametro no es un numero' } );
     };
     if ( id < 1 || id > dbProductos.length) {
         return res.status(200).json( { error: 'producto no encontrado'} );
@@ -171,6 +172,12 @@ routerProductos.delete('/:id', (req, res) => {
 
 routerCarrito.get('/:id/productos', (req, res) => {
     const id = parseInt(req.params.id);  //param del id del carrito
+    if (isNaN(id) ) {
+        return res.status(200).json( { error: 'Ingrese un ID válido' } );
+    };
+    if ( id < 1 || id > carritos.length) {
+        return res.status(200).json( { error: 'Carrito no encontrado'} );
+    };
     const indiceDeCarrito = carritos.map(carrito => carrito.id).indexOf(id); //obtengo con el param la posición del carrito a consultar
     res.status(200).json({carrito: carritos[indiceDeCarrito]})  //imprimo el carrito con los productos agregados
 })
@@ -184,12 +191,22 @@ routerCarrito.post('/', (req, res) => {
         productos: [],
     }
     carritos.push(carrito)
-    res.status(200).json({carrito: carritos[carrito.id - 1]}) 
+    res.status(200).json({carrito: carritos[carrito.id - 1]})
+    /*res.status(200).render('pages/carrito.ejs', {carritos}) logica para renderizar carrito*/
 })
 
 routerCarrito.post('/:id/:productoId', (req, res) => {
     const id = parseInt(req.params.id);  //param del id del carrito al cual se va a pushear producto
     const productoId = parseInt(req.params.productoId); // param del id del producto que se va a pushear al carrito recibido por param anteriormente
+    if (isNaN(id) || isNaN(productoId) ) {
+        return res.status(200).json( { error: 'Ingrese IDs válidos' } );
+    };
+    if ( id < 1 || id > carritos.length) {
+        return res.status(200).json( { error: 'Carrito no encontrado'} );
+    };
+    if ( productoId < 1 || id > dbProductos.length) {
+        return res.status(200).json( { error: 'Producto no encontrado'} );
+    };
     const indiceDeCarrito = carritos.map(carrito => carrito.id).indexOf(id); //obtengo con el param la posición del carrito a pushear
     const IndexProductoAPushear = dbProductos.map(producto => producto.id).indexOf(productoId); //obtengo con el param la posición del producto a pushear
     carritos[indiceDeCarrito].productos.push(dbProductos[IndexProductoAPushear]); //dentro de la property "productos" del carrito, pusheo el producto
@@ -200,6 +217,12 @@ routerCarrito.post('/:id/:productoId', (req, res) => {
 
 routerCarrito.delete('/:id', (req, res) => {
     const id = parseInt(req.params.id); //param del id del carrito
+    if (isNaN(id) ) {
+        return res.status(200).json( { error: 'Ingrese un ID válido' } );
+    };
+    if ( id < 1 || id > carritos.length) {
+        return res.status(200).json( { error: 'Carrito no encontrado'} );
+    };
     const indiceDeCarrito = carritos.map(carrito => carrito.id).indexOf(id); //obtengo con el param la posición del carrito a eliminar
     carritos[indiceDeCarrito].productos = ''; // limpio los productos que había agregado
     carritos.splice(indiceDeCarrito, 1); // elimino el carrito
@@ -209,6 +232,15 @@ routerCarrito.delete('/:id', (req, res) => {
 routerCarrito.delete('/:id/productos/:id_prod', (req, res) => {
     const id = parseInt(req.params.id);  //param del id del carrito al cual se le va a eliminar el producto
     const productoId = parseInt(req.params.id_prod); // param del id del producto que se va a eliminar del carrito
+    if (isNaN(id) || isNaN(productoId) ) {
+        return res.status(200).json( { error: 'Ingrese IDs válidos' } );
+    };
+    if ( id < 1 || id > carritos.length) {
+        return res.status(200).json( { error: 'Carrito no encontrado'} );
+    };
+    if ( productoId < 1 || id > dbProductos.length) {
+        return res.status(200).json( { error: 'Producto no encontrado'} );
+    };
     const indiceDeCarrito = carritos.map(carrito => carrito.id).indexOf(id); //obtengo con el param la posición del carrito a editar
     const IndexProductoAEliminar = carritos[indiceDeCarrito].productos.map(producto => producto.id).indexOf(productoId); //dentro del array de productos de mi carrito, obtengo el index del producto a eliminar
     carritos[indiceDeCarrito].productos.splice(IndexProductoAEliminar, 1); //dentro de la property "productos" del carrito, pusheo el producto

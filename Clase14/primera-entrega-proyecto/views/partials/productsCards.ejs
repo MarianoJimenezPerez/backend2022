@@ -1,0 +1,18 @@
+<% if (dbProductos.length > 0) { %>
+    <% for(const producto of dbProductos) { %>
+        <div class="col mt-3">
+            <div class="card" style="width: 18rem;">
+                <img src="<%= producto.foto %>" class="card-img-top" alt="<%= producto.title %>">
+                <div class="card-body">
+                    <h5 class="card-title"><%= producto.nombre %></h5>
+                    <p class="card-text"><%= producto.descripcion %></p>
+                    <a href="#" class="btn btn-primary">Conocer</a>
+                </div>
+            </div>
+        </div>
+    <% } %>
+<% } else { %>
+    <div class="container mt-3">
+        <h3 class="alert alert-danger">No se encontro ningun dato</h3>
+    </div>
+<% } %> 

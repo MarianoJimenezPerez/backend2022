@@ -2,6 +2,7 @@
 const express = require('express');
 const routerProductos  = express.Router(); 
 const routerCarrito  = express.Router();
+const ejs = require('ejs');
 
 /* --------------------------------Instancia de express-------------------------------- */
 
@@ -14,6 +15,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.use('/productos', routerProductos);
 app.use('/carrito', routerCarrito);
+
+/* --------------------------------Motor de plantilla-------------------------------- */
+
+app.set('view engine', (__dirname, 'ejs'));
 
 /* --------------------------------Arrays globales-------------------------------- */
 
@@ -35,6 +40,24 @@ const dbProductos = [
         stock: 10,
         precio: 100,
         id: 2
+    },
+    { 
+        timestamp: "1",
+        nombre: "Mousepad",
+        descripcion: "Un mousepad terrible",
+        foto: "https://cdn3.iconfinder.com/data/icons/education-209/64/calculator-math-tool-school-256.png",
+        stock: 8,
+        precio: 300,
+        id: 3
+    },
+    { 
+        timestamp: "1",
+        nombre: "Monitor",
+        descripcion: "Un monitor 144hz",
+        foto: "https://cdn3.iconfinder.com/data/icons/education-209/64/calculator-math-tool-school-256.png",
+        stock: 6,
+        precio: 500,
+        id: 4
     }
 ];
 
@@ -43,7 +66,7 @@ const dbProductos = [
 /*---GETs router productos---*/
 
 routerProductos.get('/', (req, res) => {
-    res.status(200).json({productos: dbProductos}); 
+    res.status(200).render('pages/index', {dbProductos}) 
 })
 
 routerProductos.get('/:id', (req, res) => {

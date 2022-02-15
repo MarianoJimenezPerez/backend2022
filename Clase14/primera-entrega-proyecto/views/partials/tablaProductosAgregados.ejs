@@ -1,0 +1,28 @@
+<% if (carritos[carritos.length - 1].productos.length > 0) { %> <%# Solo funciona con un usuario a la vez, ya que siempre retorna el ultimo carrito. A futuro, trabajar local storage %>
+    <div class="container">
+        <h3 class="color-brown mt-3">Tus productos agregados</h3>
+        <table class="table tabla-productos mt-3">
+            <thead class="text-center">
+                <tr>
+                    <th>Producto</th>
+                    <th>Nombre</th>
+                    <th>Precio</th>
+                </tr>
+            </thead>
+            <tbody id="t-body-productos" class="text-center"></tbody>
+            <% for(const producto of carritos[carritos.length - 1].productos) { %>
+                <tr>
+                    <td>
+                        <img src="<%= producto.thumbnail %>" alt="<%= producto.title %>">
+                    </td>
+                    <td><%= producto.nombre %></td>
+                    <td><%= producto.precio %></td>
+                </tr>
+            <% } %>
+        </table>
+    </div>
+<% } else { %>   <%# Si no tengo ningun producto agregado%>
+    <div class="container mt-3">
+        <h3 class="alert alert-danger">Todavia no has agregado ningún producto a tu carrito</h3>
+    </div>
+<% } %> 

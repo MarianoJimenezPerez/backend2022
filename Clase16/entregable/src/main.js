@@ -12,6 +12,8 @@ import config from './config.js'
 import {fileURLToPath} from 'url';
 import { dirname } from 'path';
 
+import path from 'path'
+
 import { engine } from 'express-handlebars'
 
 const __filename = fileURLToPath(import.meta.url);
@@ -36,8 +38,8 @@ app.set('view engine', 'hbs')
 app.engine('hbs', engine({
     extname: 'hbs',
     defaultLayout: 'layout',
-    partialsDir: __dirname + '/views/partials/',
-    layoutsDir: __dirname + '/views/layouts/'
+    partialsDir: (path.join(__dirname, '../', '/views/partials/')),
+    layoutsDir: (path.join(__dirname, '../', '/views/layouts/'))
 }))
 
 /* --------------------------------Websocket-------------------------------- */

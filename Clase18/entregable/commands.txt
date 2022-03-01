@@ -1,0 +1,204 @@
+/************Crear db************/
+
+use ecommerce
+
+/************Crear colecciones************/
+
+db.createCollection("productos")
+db.createCollection("mensajes")
+
+/************Agregar 10 productos************/
+
+db.productos.insertMany([
+    {
+        title: "Auricular Redragon H120 ARES MIC 3.5mm",
+        price: 1946,
+        thumbnail: "https://mundofix.com/298939-home_default/auricular-redragon-h120-ares-mic-35mm.jpg",
+        idProducto: 1
+    },
+    {
+        title: "Auricular Genius HS-02B MIC 3,5mm",
+        price: 879,
+        thumbnail: "https://mundofix.com/298900-home_default/auricular-genius-hs-02b-mic-35mm.jpg",
+        idProducto: 2
+    },
+    {
+        title: "Auricular Redragon H901 Scylla MIC 3,5mm",
+        price: 2668,
+        thumbnail: "https://mundofix.com/298983-home_default/auricular-redragon-h901-scylla-mic-35mm.jpg",
+        idProducto: 3
+    },
+    {
+        title: "Teclado Gamer Redragon K550 Yama Blanco ES RGB USB",
+        price: 929,
+        thumbnail: "https://mundofix.com/387827-home_default/teclado-gamer-redragon-k550-yama-blanco-es-rgb-usb.jpg",
+        idProducto: 4
+    },
+    {
+        title: "Teclado Genius KB-100 USB Smart",
+        price: 345.67,
+        thumbnail: "https://mundofix.com/413243-home_default/teclado-genius-kb-100-usb-smart.jpg",
+        idProducto: 5
+    },
+    {
+        title: "Teclado Gamer Redragon K530 Draconic RGB Black",
+        price: 7190,
+        thumbnail: "https://mundofix.com/387852-home_default/teclado-gamer-redragon-k530-draconic-rgb-black-bluetooth-usb.jpg",
+        idProducto: 6
+    },
+    {
+        title: "Logitech G502 Hero",
+        price: 6899,
+        thumbnail: "https://mundofix.com/414609-home_default/logitech-g502-hero.jpg",
+        idProducto: 7
+    },
+    {
+        title: "Mouse Gamer Redragon M607 Griffin Blanco RGB USB",
+        price: 1852,
+        thumbnail: "https://mundofix.com/396574-home_default/mouse-gamer-redragon-m607-griffin-blanco-rgb-usb.jpg",
+        idProducto: 8
+    },
+    {
+        title: "Mouse Gamer Redragon M721 Lonewolf Pro RGB USB",
+        price: 2847,
+        thumbnail: "https://mundofix.com/395572-home_default/mouse-gamer-redragon-m721-lonewolf-pro-rgb-usb.jpg",
+        idProducto: 9
+    },
+    {
+        title: "Mouse Gamer Logitech G203 Lightsync Blanco USB",
+        price: 3049,
+        thumbnail: "https://mundofix.com/184649-home_default/mouse-gamer-logitech-g203-lightsync-blanco-usb.jpg",
+        idProducto: 10
+    }
+])
+
+
+/************Agregar 10 mensajes************/
+
+db.mensajes.insertMany([
+    {
+        email: "System@system.com",
+        message: "Bienvenido",
+    },
+    {
+        email: "marianojimenezperez1@gmail.com",
+        message: "Buenos días, me gustaría cotizar un producto",
+    },
+    {
+        email: "System@system.com",
+        message: "Gusto en saludarte! Comentame, que tipo de producto estas buscando?",
+    },
+    {
+        email: "marianojimenezperez1@gmail.com",
+        message: "Me gustaría ver un teclado Redragon",
+    },
+    {
+        email: "System@system.com",
+        message: "Perfecto. Trabajamos con la marca Redragon. A continuación te dejo un link donde podrás ver todos los modelos disponibles",
+    },
+    {
+        email: "System@system.com",
+        message: "Link",
+    },
+    {
+        email: "marianojimenezperez1@gmail.com",
+        message: "Ahora lo miro",
+    },
+    {
+        email: "marianojimenezperez1@gmail.com",
+        message: "Muchas gracias",
+    },
+    {
+        email: "System@system.com",
+        message: "Cualquier duda que tengas estoy a tu dispocisión",
+    },
+    {
+        email: "System@system.com",
+        message: "Fantástico.",
+    }
+])
+
+/************listar docs de cada collection************/
+
+db.mensajes.find()
+db.productos.find()
+
+/************mostrar cantidad de docs almacenados en colecciones************/
+
+db.mensajes.count()
+db.productos.count()
+
+/************agregar un producto más************/
+
+db.productos.insertOne({
+    title: "Micrófono Fifine K669B Black USB",
+    price: 6839,
+    thumbnail: "https://mundofix.com/314293-home_default/micrfono-fifine-k669b-black-usb.jpg",
+    idProducto: 11
+})
+
+
+/************listar precio menor a mil************/
+
+db.productos.find({price: {$lt: 1000}})
+
+
+
+/************listar precio entre mil y tresmil************/
+
+db.productos.find({$and: [{price: {$gt: 1000}}, {price: {$lt: 3000}}]})
+
+
+
+/************listar precio mayor a tresmil************/
+
+db.productos.find({price: {$gt: 3000}})
+
+
+
+/************consulta que solo traiga el nombre del tercer producto más barato************/
+
+db.productos.find({}, {"price":1, _id: 0}).sort({price: 1}).limit(1).skip(2)
+
+
+
+/************agregar stock************/
+
+db.productos.updateMany({}, {$set: {stock: 100}})
+
+
+
+/************agotar stock de productos menores a 4000 pesos************/
+
+db.productos.updateMany({price: {$lt: 4000}}, {$set: {stock: 0}})
+
+
+
+/************borrar los productos con precio menor a 1000************/
+
+db.productos.deleteMany({price: {$lt: 1000}})
+
+
+/************crear usuario pepe************/
+
+db.createUser(
+    {
+        user: "pepe",
+        pwd: "asd456",
+        roles: [
+            {role: "read", db: "ecommerce"}
+        ]
+    }
+)
+
+/************crear usuario admin************/
+
+db.createUser(
+    {
+        user: "admin",
+        pwd: "asd456",
+        roles: [
+            {role: "readWrite", db: "ecommerce"}
+        ]
+    }
+)

@@ -8,7 +8,7 @@ export default class ContenedorSQL {
     
     async listar(id) {
         try {
-            return this.knex.select('*').from(this.tabla).where('id', id)
+            return await this.knex.select('*').from(this.tabla).where('id', id)
         } catch (error){
             throw new Error (`Error al listar por id: ${error}`)
         }
@@ -16,7 +16,7 @@ export default class ContenedorSQL {
 
     async listarAll() {
         try {
-            return this.knex.select('*').from(this.tabla)
+            return await this.knex.select('*').from(this.tabla)
         } catch (error){
             throw new Error (`Error al listar por id: ${error}`)
         }
@@ -24,7 +24,7 @@ export default class ContenedorSQL {
     
     async guardar(elem) {
         try {
-            return this.knex.insert(elem).into(this.tabla)
+            return await this.knex.insert(elem).into(this.tabla)
         } catch (error){
             throw new Error (`Error al listar por id: ${error}`)
         }

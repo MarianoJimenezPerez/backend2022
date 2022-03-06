@@ -44,15 +44,15 @@ app.engine('hbs', engine({
 
 /* --------------------------------Websocket-------------------------------- */
 
-io.on('connection', (socket) => { //defino la conexión y recibo con "on" al cliente.
+io.on('connection', async (socket) => { //defino la conexión y recibo con "on" al cliente.
     const productos = productosApi.listarAll();
     const mensajes = mensajesApi.listarAll();
 
     //envio los productos históricos
-    socket.emit('productosHistoricos', productos)
+    socket.emit('productosHistoricos', await productosApi.listarAll())
 
     //envio los mensajes históricos
-    socket.emit('mensajesHistoricos', mensajes)
+    socket.emit('mensajesHistoricos', await mensajesApi.listarAll())
 
     //escucho nuevos productos
     socket.on('nuevoProducto', async producto => {

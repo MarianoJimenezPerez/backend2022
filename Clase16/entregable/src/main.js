@@ -49,22 +49,22 @@ io.on('connection', async (socket) => { //defino la conexión y recibo con "on" 
     const mensajes = mensajesApi.listarAll();
 
     //envio los productos históricos
-    socket.emit('productosHistoricos', await productosApi.listarAll())
+    socket.emit('productosHistoricos', await productos)
 
     //envio los mensajes históricos
-    socket.emit('mensajesHistoricos', await mensajesApi.listarAll())
+    socket.emit('mensajesHistoricos', await mensajes)
 
     //escucho nuevos productos
     socket.on('nuevoProducto', async producto => {
         productosApi.guardar(producto)
-        io.sockets.emit('productosHistoricos', await productosApi.listarAll())  //actualizo la vista, enviando nuevamente los productos históricos
+        io.sockets.emit('productosHistoricos', await productos)  //actualizo la vista, enviando nuevamente los productos históricos
     })
 
     //escucho nuevos mensajes
     socket.on('nuevoMensaje', async mensaje => {
         mensaje.fyh = new Date().toLocaleString()
         mensajesApi.guardar(mensaje)
-        io.sockets.emit('mensajesHistoricos', await mensajesApi.listarAll())  //actualizo la vista, enviando nuevamente la bandeja histórica
+        io.sockets.emit('mensajesHistoricos', await mensajes)  //actualizo la vista, enviando nuevamente la bandeja histórica
     })
 })
 

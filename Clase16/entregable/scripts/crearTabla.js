@@ -1,5 +1,5 @@
 import knex from "knex"
-import config from "../src/config"
+import config from "./../src/config.js"
 
 // Productos en mariadb
 
@@ -19,7 +19,7 @@ try {
 } catch ( error ) {
     console.log('Error en la tabla de productos de mariadb')
     console.log(error)
-}
+} 
 
 // mensajes en sqlite 3
 
@@ -28,7 +28,7 @@ try {
 
     await sqlite3Client.schema.dropTableIfExists('mensajes')
 
-    await sqlite3Clientschema.createTable('mensajes', table => {
+    await sqlite3Client.schema.createTable('mensajes', table => {
         table.increments('id').primary()
         table.string('autor', 50)
         table.string('texto', 1024)

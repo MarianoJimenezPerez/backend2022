@@ -2,7 +2,7 @@ export default {
     sqlite3: {
         client: 'better-sqlite3',
         connection: {
-            filename: "./../DB/ecommerce.db3"
+            filename: "./../DB/ecommerce.sqlite"
         },
         useNullAsDefault: true
     },

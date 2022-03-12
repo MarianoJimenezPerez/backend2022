@@ -6,6 +6,7 @@ import CarritosDaoMongoDB from "./src/DAOs/carritos/carritosMongo.dao.js";
 import ProductosDaoFirebase from "./src/DAOs/productos/productosFirebase.dao.js";
 import CarritosDaoFirebase from "./src/DAOs/carritos/carritosFirebase.dao.js";
 
+
 /* --------------------------------Instancia de express-------------------------------- */
 
 const app = express();
@@ -25,8 +26,23 @@ app.use(express.static('public'));
 
 /* --------------------------------Rutas-------------------------------- */
 
+app.get('/', (req, res) => {
+    res.status(200).json({
+        "autor": "System",
+        "msg": {
+            "RutasMongoDB": "/productos, /carritos",
+            "RutasFirebase" : "/f/productos, /f/carritos"
+        }
+    });
+})
+
 app.get('/productos', async (req, res) => {  //defino como async para poder indicar el await
     res.status(200).json(await objProductoDao.listarTodo());  //para poder invocar el método, se utiliza await porque así está declarado
+    /*
+    importación dinámica
+    let objProductoDao = await import("./src/DAOs/productos/productosMongo.dao.js");
+    res.status(200).json(await objProductoDao.listarTodo());
+    */
 })
 
 app.get('/carritos', async (req, res) => {  

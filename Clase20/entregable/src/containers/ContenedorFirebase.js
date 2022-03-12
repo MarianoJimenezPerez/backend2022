@@ -22,24 +22,23 @@ class ContenedorFirebase {
 
     async listarTodo(){
         try {
-            console.log(this.coleccion._path.segments[0])
             // si la coleccion es productos, imprimo valores de productos
-            if(this.coleccion._path.segments[0] = "productos"){ 
+            if(this.coleccion._path.segments[0] == "productos"){ 
                 const snapshot = await getDocs(collection(db, this.coleccion._path.segments[0]))
                 const productos = []
                 snapshot.forEach((doc) => {
-                    productos.push(doc.data())  //extraigo y pusheo el dato de cara doc analizado
+                    productos.push(doc.data())  //extraigo y pusheo el dato de cada doc analizado
                 });
                 return productos;
                 
             } 
             // si la coleccion es carritos, imprimo valores de carritos
-            if (this.coleccion._path.segments[0] = "carritos"){
+            if (this.coleccion._path.segments[0] == "carritos"){
                 
                 const snapshot = await getDocs(collection(db, this.coleccion._path.segments[0]))
                 const carritos = []
                 snapshot.forEach((doc) => {
-                    carritos.push(doc.data()) //extraigo y pusheo el dato de cara doc analizado
+                    carritos.push(doc.data()) //extraigo y pusheo el dato de cada doc analizado
                 });
                 return carritos;
             }
@@ -51,11 +50,5 @@ class ContenedorFirebase {
         }
     }
 }
-
-/*const coleccionProductos = collection(db, 'productos');
-const objProducto = new ContenedorFirebase(coleccionProductos);
-
-await objProducto.listarTodo()*/
-
 
 export default ContenedorFirebase;

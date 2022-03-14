@@ -13,6 +13,17 @@ class ProductosDaoMongoDB extends ContenedorMongoDB{
             }
         )
     }
+    /* Cumple la función de un update */
+    async actualizarNombre(valorViejo, valorNuevo){
+        try {
+            const doc = await this.coleccion.updateOne({name: valorViejo, name: valorNuevo})
+            return doc
+        } catch (err) {
+            console.log({
+                msg: `Se produjo un error al intentar actualizarNombre(${valorViejo}): ${err}`
+            }) 
+        }
+    }
 }
 
 export default ProductosDaoMongoDB;

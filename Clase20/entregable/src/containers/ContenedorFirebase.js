@@ -35,7 +35,7 @@ class ContenedorFirebase {
             // si la coleccion es carritos, imprimo valores de carritos
             if (this.coleccion._path.segments[0] == "carritos"){
                 
-                const snapshot = await getDocs(collection(db, this.coleccion._path.segments[0]))
+                const snapshot = await getDocs(collection(db, this.coleccion._path.segments[0]).doc(`${id}`))
                 const carritos = []
                 snapshot.forEach((doc) => {
                     carritos.push(doc.data()) //extraigo y pusheo el dato de cada doc analizado
@@ -49,6 +49,23 @@ class ContenedorFirebase {
             })
         }
     }
+
+    async leerId(id){
+        try {
+            const doc = await getDocs(collection(db, this.coleccion._path.segments[0]))
+            console.log(doc._docs)
+        } catch (err) {
+            console.log({
+                msg: `Se produjo un error al intentar listarId(${id}) desde firebase en la coleccion ${this.coleccion._path.segments[0]}: ${err}`
+            })
+        }
+    }
 }
+
+/*const productoEjemplo = new ContenedorFirebase('productos');
+
+const resultado = await productoEjemplo.leerId(1);
+
+console.log(resultado)*/
 
 export default ContenedorFirebase;

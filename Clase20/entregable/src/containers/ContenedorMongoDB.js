@@ -24,6 +24,30 @@ class ContenedorMongoDB {
             })
         }
     }
+    async listarId(id){
+        try {
+
+            const doc = await this.coleccion.find({_id: id});
+            return doc
+
+        } catch (err) {
+            console.log({
+                msg: `Se produjo un error al intentar listarId(${id}) desde mongodb en la coleccion ${this.coleccion}: ${err}`
+            })
+        }
+    }
+
+    async eliminarId(id){
+        try {
+            const doc = await this.coleccion.deleteOne({_id: id});
+            return doc
+
+        } catch (err) {
+            console.log({
+                msg: `Se produjo un error al intentar eliminarId(${id}) desde mongodb en la coleccion ${this.coleccion}: ${err}`
+            }) 
+        }
+    }
 }
 
 export default ContenedorMongoDB;
